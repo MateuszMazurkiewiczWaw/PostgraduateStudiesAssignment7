@@ -1,0 +1,3 @@
+train:
+  n_trials: 25
+  random_state: 42
