@@ -7,37 +7,37 @@ import os
 def preprocess():
     print("Rozpoczynam preprocessing danych...")
 
-    # Wczytanie surowych danych
+    # Load raw data
     df = pd.read_csv('data/raw_penguins.csv')
 
-    # 1. Usunięcie braków danych
+    # 1. Remove missing values
     df = df.dropna()
 
-    # 2. Wyodrębnienie cech kategorycznych
+    # 2. Extract categorical features
     categorical_cols = ['island', 'sex']
 
-    # Inicjalizacja OneHotEncodera
-    # sparse_output=False sprawia, że otrzymujemy zwykłą tablicę (łatwiejszą do połączenia z pandas)
+    # Initialize OneHotEncoder
+    # sparse_output=False returns a regular array (easier to concatenate with pandas)
     encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
 
-    # Dopasowanie (nauka kategorii) i transformacja na zera i jedynki
+    # Fit (learn categories) and transform into zeros and ones
     encoded_array = encoder.fit_transform(df[categorical_cols])
 
-    # Utworzenie z tego nowej tabeli (DataFrame) z odpowiednimi nazwami kolumn
+    # Create a new DataFrame with appropriate column names
     encoded_df = pd.DataFrame(
         encoded_array,
         columns=encoder.get_feature_names_out(categorical_cols),
         index=df.index
     )
 
-    # Wyrzucenie starych kolumn tekstowych i doklejenie nowych, zakodowanych
+    # Drop old categorical columns and concatenate the new encoded ones
     df = df.drop(columns=categorical_cols)
     df = pd.concat([df, encoded_df], axis=1)
 
-    # Zapisanie przetworzonych danych
+    # Save preprocessed data
     df.to_csv('data/preprocessed_penguins.csv', index=False)
 
-    # Zapisanie samego encodera do pliku, by użyć go później w BentoML!
+    # Save the encoder itself to a file for later use in BentoML!
     os.makedirs('models', exist_ok=True)
     joblib.dump(encoder, 'models/encoder.joblib')
 

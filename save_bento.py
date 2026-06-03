@@ -8,10 +8,10 @@ def save_to_bento():
     encoder = joblib.load('models/encoder.joblib')
 
     print("Zapisywanie do magazynu BentoML...")
-    # Zapisujemy model
+    # Save the model
     bentoml.sklearn.save_model('penguins_classifier', model)
 
-    # Zapisujemy encoder
+    # Save the encoder
     bentoml.sklearn.save_model('penguins_encoder', encoder)
 
     print("Gotowe! Możesz sprawdzić listę modeli wpisując: bentoml models list")

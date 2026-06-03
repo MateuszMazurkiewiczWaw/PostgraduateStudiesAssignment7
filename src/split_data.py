@@ -6,22 +6,22 @@ import os
 def split_data():
     print("Rozpoczynam podział danych na zbiór treningowy i testowy...")
 
-    # Wczytanie przetworzonych danych z poprzedniego etapu
+    # Load preprocessed data from the previous stage
     df = pd.read_csv('data/preprocessed_penguins.csv')
 
-    # Oddzielenie cech (X) od naszej etykiety, którą chcemy zgadywać (y)
-    # W naszym przypadku chcemy klasyfikować gatunek (species)
+    # Separate features (X) from the label we want to predict (y)
+    # In our case, we want to classify the species
     X = df.drop(columns=['species'])
     y = df['species']
 
-    # Podział danych - 20% idzie do testów, 80% do treningu
-    # random_state zapewnia powtarzalność wyników przy każdym uruchomieniu potoku
+    # Split data - 20% for testing, 80% for training
+    # random_state ensures reproducibility across pipeline runs
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Upewnienie się, że folder docelowy istnieje (zapiszemy to w nowym folderze dla porządku)
+    # Ensure target directory exists (saving in a new folder for better organization)
     os.makedirs('data/split', exist_ok=True)
 
-    # Zapisanie wynikowych zbiorów do plików CSV
+    # Save resulting datasets to CSV files
     X_train.to_csv('data/split/X_train.csv', index=False)
     X_test.to_csv('data/split/X_test.csv', index=False)
     y_train.to_csv('data/split/y_train.csv', index=False)
